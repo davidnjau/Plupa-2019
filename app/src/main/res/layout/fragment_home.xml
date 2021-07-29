@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+      <ScrollView
+          android:id="@+id/scrollView"
+          android:layout_marginBottom="20dp"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+         <LinearLayout
+             android:layout_marginTop="10dp"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <ImageView
+                   android:layout_gravity="center"
+                   android:background="@drawable/logo"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"/>
+
+               <TextView
+                   android:id="@+id/info"
+                   android:layout_marginBottom="5dp"
+                   android:layout_marginTop="5dp"
+                   android:gravity="center"
+                   android:textColor="@android:color/black"
+                   android:text="REPUBLIC OF KENYA"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"/>
+
+               <View
+                   android:layout_marginTop="10dp"
+                   android:layout_gravity="center"
+                   android:background="@android:color/black"
+                   android:layout_width="80dp"
+                   android:layout_height="1dp"/>
+
+               <TextView
+                   android:layout_marginBottom="5dp"
+                   android:layout_marginTop="5dp"
+                   android:gravity="center"
+                   android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                   android:textColor="@android:color/black"
+                   android:text="KENYA GAZETTE SUPPLEMENT"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"/>
+
+               <TextView
+                   android:layout_marginBottom="5dp"
+                   android:layout_marginTop="5dp"
+                   android:gravity="center"
+                   android:textStyle="bold"
+                   android:textColor="@android:color/black"
+                   android:text="ACTS, 2019"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"/>
+
+               <View
+                   android:layout_marginEnd="10dp"
+                   android:layout_marginStart="10dp"
+                   android:layout_marginTop="10dp"
+                   android:layout_gravity="center"
+                   android:background="@android:color/black"
+                   android:layout_width="match_parent"
+                   android:layout_height="1dp"/>
+               <View
+                   android:layout_marginEnd="10dp"
+                   android:layout_marginStart="10dp"
+                   android:layout_marginTop="3dp"
+                   android:layout_gravity="center"
+                   android:background="@android:color/black"
+                   android:layout_width="match_parent"
+                   android:layout_height="1dp"/>
+
+               <TextView
+                   android:layout_marginBottom="5dp"
+                   android:layout_marginTop="5dp"
+                   android:gravity="center"
+                   android:textStyle="bold"
+                   android:textColor="@android:color/black"
+                   android:text="NAIROBI, 22nd July, 2019"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"/>
+
+               <View
+                   android:layout_marginEnd="10dp"
+                   android:layout_marginStart="10dp"
+                   android:layout_gravity="center"
+                   android:background="@android:color/black"
+                   android:layout_width="match_parent"
+                   android:layout_height="1dp"/>
+               <View
+                   android:layout_marginEnd="10dp"
+                   android:layout_marginStart="10dp"
+                   android:layout_marginTop="3dp"
+                   android:layout_gravity="center"
+                   android:background="@android:color/black"
+                   android:layout_width="match_parent"
+                   android:layout_height="1dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <TextView
+                   android:visibility="gone"
+                   android:textStyle="bold"
+                   android:layout_gravity="center"
+                   android:textColor="@android:color/black"
+                   android:layout_margin="10dp"
+                   android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                   android:id="@+id/tvPartHeading"
+                   android:text="There's no data. Check your internet and reload."
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"/>
+
+               <TextView
+                   android:layout_marginTop="10dp"
+                   android:textStyle="bold"
+                   android:layout_gravity="center"
+                   android:layout_marginStart="15dp"
+                   android:textColor="@android:color/black"
+                   android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                   android:id="@+id/tvPlupaDetails"
+                   android:text=""
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"/>
+
+
+
+               <org.sufficientlysecure.htmltextview.HtmlTextView
+                   android:paddingBottom="5dp"
+                   android:layout_marginBottom="7dp"
+                   android:layout_marginStart="15dp"
+                   android:text=""
+                   android:id="@+id/tvPlupaData"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:textAppearance="@android:style/TextAppearance.Large" />
+
+
+
+            </LinearLayout>
+
+
+
+         </LinearLayout>
+
+      </ScrollView>
+
+      <ImageView
+          android:visibility="gone"
+          android:id="@+id/imageView"
+          android:scaleType="center"
+          android:background="@drawable/landing"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <LinearLayout
+          android:id="@+id/linearLayout"
+          android:layout_marginBottom="15dp"
+          android:orientation="vertical"
+          android:layout_alignParentBottom="true"
+          android:layout_width="match_parent"
+          android:gravity="center"
+          android:layout_height="wrap_content">
+
+         <LinearLayout
+             android:orientation="horizontal"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+               <com.google.android.material.floatingactionbutton.FloatingActionButton
+                   android:layout_width="wrap_content"
+                   android:id="@+id/fabPrev"
+                   android:layout_gravity="bottom|end"
+                   android:layout_margin="10dp"
+                   app:layout_behavior="com.luasoftware.lualib2.ScrollAwareFABBehavior"
+                   app:tint="@android:color/white"
+                   app:srcCompat="@drawable/ic_action_prev"
+                   android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+               <com.google.android.material.floatingactionbutton.FloatingActionButton
+                   android:layout_width="wrap_content"
+                   android:id="@+id/fabNext"
+                   android:layout_margin="10dp"
+                   app:layout_behavior="com.luasoftware.lualib2.ScrollAwareFABBehavior"
+                   app:tint="@android:color/white"
+                   app:srcCompat="@drawable/ic_action_next"
+                   android:layout_height="wrap_content"/>
+
+
+            </RelativeLayout>
+
+
+         </LinearLayout>
+
+      </LinearLayout>
+
+
+
+   </RelativeLayout>
+
+
+
+
+
+
+
+
+
+</RelativeLayout>
