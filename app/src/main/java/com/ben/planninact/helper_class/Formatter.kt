@@ -1,7 +1,11 @@
 package com.ben.planninact.helper_class
 
+import android.graphics.Color
 import android.os.Build
 import android.text.Html
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
 
 class Formatter {
 
@@ -25,5 +29,7 @@ class Formatter {
             Html.fromHtml(html2).toString()
         }
     }
+
+
 
 }

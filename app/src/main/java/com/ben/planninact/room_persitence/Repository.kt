@@ -89,46 +89,170 @@ class Repository(private val planningDao: PlanningDao) {
     suspend fun getThirdSchedule():List<ThirdSchedule>{
         return planningDao.getPlupaThirdSchedule()
     }
-    suspend fun getPlupaResults(partQuery: String):List<String>{
 
-        val partHeadingList = ArrayList<PlupaPojo>()
-        val plupaDataInfoList = planningDao.getPlupaResults()
+    suspend fun getRevisedPlupaDetails(partQuery: String):List<PlupaPojo>{
 
-        val partHeadingList1 = ArrayList<String>()
+        val displayDataList = ArrayList<PlupaPojo>()
+        val plupaDetailsList = getPlupaResults(partQuery)
+        for (items in plupaDetailsList){
+
+            val dbId = items.dbId
+            val dbHeading = items.dbHeading
+            val dbBody = items.dbBody
+            val dbType = items.dbType
+
+            var displayData = ""
+
+            if (dbType == "third_schedule"){
+
+                displayData += dbBody + "\n"
+                displayData += dbHeading
+
+            }
+            displayData = dbBody
+
+            val plupaPojo = PlupaPojo(
+                dbId, dbHeading, dbBody, dbType
+            )
 
 
-        for (item in plupaDataInfoList){
+            displayDataList.add(plupaPojo)
+        }
 
-            val id = item.id
-            val partHeading = item.part_heading
-            val partDescr = item.part_description
-            val partId = item.part_id
+        return displayDataList
 
-            if (partHeading.toLowerCase().contains(partQuery.toLowerCase())){
+    }
 
-                val plupaDataInfo = PlupaPojo(id.toString(), stripHtml(partHeading), partDescr, partId)
+    suspend fun getPlupaResults(partQuery: String):List<PlupaPojo>{
 
-                partHeadingList1.add(id.toString())
+        val plupaHeadDetailsList = planningDao.getPlupaTitles()
+        val plupaDetailsList = planningDao.getPlupaResults()
+        val firstScheduleList = planningDao.getPlupaFirstSchedule()
+        val secondScheduleList = planningDao.getPlupaSecondSchedule()
+        val thirdScheduleList = planningDao.getPlupaThirdSchedule()
+
+        val partHeadingList1 = ArrayList<PlupaPojo>()
+
+        for (titles in plupaHeadDetailsList){
+
+            val id = titles.id.toString()
+            val partName = titles.part_name
+            val partNumber = titles.part_number
+
+            if (partName.toLowerCase().contains(partQuery.toLowerCase())){
+
+                val plupaPojo = PlupaPojo(id, partName, partNumber, "plupa_content")
+                partHeadingList1.add(plupaPojo)
             }
 
+
+
         }
+        for (content in plupaDetailsList){
+
+            val contentId = content.id.toString()
+            val contentHeading = content.part_heading
+            val contentDesc = content.part_description
+
+            if (contentHeading.toLowerCase().contains(partQuery.toLowerCase()) ||
+                contentDesc.toLowerCase().contains(partQuery.toLowerCase())){
+
+                val plupaPojo = PlupaPojo(contentId, contentHeading, contentDesc,
+                    "plupa_content")
+                partHeadingList1.add(plupaPojo)
+            }
+
+
+
+        }
+        for (content in firstScheduleList){
+
+            val contentId = content.id.toString()
+            val contentHeading = content.part_name
+            val contentDesc = content.content_description
+
+            if (contentDesc.toLowerCase().contains(partQuery.toLowerCase())){
+
+                val plupaPojo = PlupaPojo(contentId, contentHeading, contentDesc,
+                    "first_schedule")
+                partHeadingList1.add(plupaPojo)
+            }
+
+
+        }
+        for (content in secondScheduleList){
+
+            val contentId = content.id.toString()
+            val contentHeading = content.part_name
+            val contentDesc = content.content_description
+            if (contentDesc.toLowerCase().contains(partQuery.toLowerCase())){
+
+                val plupaPojo = PlupaPojo(contentId, contentHeading, contentDesc,
+                    "second_schedule")
+                partHeadingList1.add(plupaPojo)
+            }
+
+
+        }
+        for (content in thirdScheduleList){
+
+            val contentId = content.id.toString()
+            val contentHeading = content.title
+            val contentDesc = content.content_description
+            if (contentDesc.toLowerCase().contains(partQuery.toLowerCase()) ||
+                contentHeading.toLowerCase().contains(partQuery.toLowerCase()) ){
+
+                val plupaPojo = PlupaPojo(contentId, contentHeading, contentDesc,
+                    "third_schedule")
+                partHeadingList1.add(plupaPojo)
+            }
+
+
+        }
+
 
         return partHeadingList1
     }
-    fun stripHtml(html1: String): String {
 
-        val html = html1.replace("<br />", "")
-        val html2 = html.replace("</p>", "")
+    suspend fun getPlupaDetailsById(id : String, type: String) : PlupaPojo {
 
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(html2, Html.FROM_HTML_MODE_LEGACY).toString()
-        } else {
-            Html.fromHtml(html2).toString()
+        var dbId  = ""
+        var dbHeading  = ""
+        var dbContent  = ""
+
+        if (type == "plupa_content"){
+            val plupaContent = planningDao.getPlupaDetailsById(id)
+            dbId = plupaContent.id.toString()
+            dbHeading = plupaContent.part_heading
+            dbContent = plupaContent.part_description
+
+        }else if (type == "first_schedule"){
+            val firstScheduleData = planningDao.getFirstScheduleByPartId(id.toInt())
+            dbId = firstScheduleData.id.toString()
+            dbHeading = firstScheduleData.part_name
+            dbContent = firstScheduleData.content_description
+
+        }else if(type == "second_schedule"){
+            val secondScheduleData = planningDao.getSecondScheduleByPartId(id.toInt())
+            dbId = secondScheduleData.id.toString()
+            dbHeading = secondScheduleData.part_name
+            dbContent = secondScheduleData.content_description
+
+        }else if (type == "third_schedule"){
+            val thirdScheduleData = planningDao.getThirdScheduleByPartId(id.toInt())
+            var dbBody = ""
+            dbId = thirdScheduleData.id.toString()
+            dbHeading = thirdScheduleData.title
+            dbBody = thirdScheduleData.content_description
+            dbBody = "$dbHeading \n $dbBody"
+            dbContent = dbBody
+
         }
-    }
-    suspend fun getPlupaDetailsById(id : String) : PartDetailsContent {
 
-        return planningDao.getPlupaDetailsById(id)
+        val plupaPojo = PlupaPojo(dbId, dbHeading, dbContent, type)
+
+
+        return plupaPojo
 
     }
 

@@ -2,50 +2,50 @@ package com.ben.planninact.helper_class;
 
 public class PlupaPojo {
 
-    private String id;
-    private String part_heading;
-    private String part_description;
-    private String part_id;
+    private String dbId;
+    private String dbHeading;
+    private String dbBody;
+    private String dbType;
 
     public PlupaPojo() {
     }
 
-    public PlupaPojo(String id, String part_heading, String part_description, String part_id) {
-        this.id = id;
-        this.part_heading = part_heading;
-        this.part_description = part_description;
-        this.part_id = part_id;
+    public PlupaPojo(String dbId, String dbHeading, String dbBody, String dbType) {
+        this.dbId = dbId;
+        this.dbHeading = dbHeading;
+        this.dbBody = dbBody;
+        this.dbType = dbType;
     }
 
-    public String getId() {
-        return id;
+    public String getDbId() {
+        return dbId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDbId(String dbId) {
+        this.dbId = dbId;
     }
 
-    public String getPart_heading() {
-        return part_heading;
+    public String getDbHeading() {
+        return dbHeading;
     }
 
-    public void setPart_heading(String part_heading) {
-        this.part_heading = part_heading;
+    public void setDbHeading(String dbHeading) {
+        this.dbHeading = dbHeading;
     }
 
-    public String getPart_description() {
-        return part_description;
+    public String getDbBody() {
+        return dbBody;
     }
 
-    public void setPart_description(String part_description) {
-        this.part_description = part_description;
+    public void setDbBody(String dbBody) {
+        this.dbBody = dbBody;
     }
 
-    public String getPart_id() {
-        return part_id;
+    public String getDbType() {
+        return dbType;
     }
 
-    public void setPart_id(String part_id) {
-        this.part_id = part_id;
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
     }
 }

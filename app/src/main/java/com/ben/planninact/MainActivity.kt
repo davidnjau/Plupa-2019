@@ -5,14 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
@@ -24,8 +23,9 @@ import com.ben.planninact.adapter.SecondScheduleAdapter
 import com.ben.planninact.adapter.ThirdScheduleAdapter
 import com.ben.planninact.fragment.Fragment_Home
 import com.ben.planninact.fragment.Fragment_I
+import com.ben.planninact.fragment.Fragment_Titles
 import com.ben.planninact.helper_class.CheckInternet
-import com.ben.planninact.helper_class.NavData
+import com.ben.planninact.helper_class.PlupaPojo
 import com.ben.planninact.network_persitence.DBScheduleDetails
 import com.ben.planninact.network_persitence.Interface
 import com.ben.planninact.network_persitence.RetrofitBuilder
@@ -39,6 +39,9 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,6 +76,46 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }else{
             preparePlupaDetails()
         }
+
+        tvPlupaContent.setOnClickListener {
+
+            setTitleData("plupa_title")
+
+        }
+        tvFirstSchedule.setOnClickListener {
+
+            setTitleData("first_schedule")
+
+        }
+        tvSecondSchedule.setOnClickListener {
+
+            setTitleData("second_schedule")
+
+        }
+        tvThirdSchedule.setOnClickListener {
+
+            setTitleData("third_schedule")
+
+        }
+
+    }
+
+    private fun setTitleData(type: String) {
+
+        val sharedpreferences = getSharedPreferences("Plupa", Context.MODE_PRIVATE);
+        val editor: SharedPreferences.Editor = sharedpreferences.edit()
+
+        editor.putString("part_title", type)
+        editor.apply()
+
+        replaceFragmenty(
+            fragment = Fragment_Titles(),
+            allowStateLoss = true,
+            containerViewId = R.id.mainContent
+        )
+
+        drawerLayout.closeDrawer(GravityCompat.START)
+
 
     }
 
@@ -113,15 +156,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onStart() {
         super.onStart()
 
-        drawerLayout.openDrawer(GravityCompat.START)
 
         preparePlupaDetails()
+
+        val page_detail_splash =intent.getStringExtra("page_detail")
+        if (page_detail_splash != null && page_detail_splash == "true"){
+            drawerLayout.openDrawer(GravityCompat.START)
+        }else{
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
 
         replaceFragmenty(
             fragment = Fragment_Home(),
             allowStateLoss = true,
             containerViewId = R.id.mainContent
         )
+
+
     }
 
     private fun prepareThirdSchedule(thirdScheduleList: List<ThirdSchedule>) {
@@ -193,6 +244,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun checkData() {
 
+
+
         val apiService = RetrofitBuilder.getRetrofit("http://192.168.81.34:8082")
             .create(Interface::class.java)
 
@@ -225,6 +278,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             override fun onFailure(call: Call<DBScheduleDetails>, t: Throwable) {
+
+
                 Log.e("-*-*error ", t.localizedMessage)
             }
 
@@ -234,9 +289,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
+
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-
-
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -249,7 +304,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val searchViewItem = menu.findItem(R.id.app_bar_search)
         val searchView : SearchView = MenuItemCompat.getActionView(searchViewItem) as SearchView
-        searchView.setQueryHint("Start typing..");
+        searchView.setQueryHint("Start typing..")
         searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
@@ -262,7 +317,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         containerViewId = R.id.mainContent
                     )
 
-                    addPlupaShared(plupaQueryList)
+
+
+                    addPlupaShared(plupaQueryList,query)
 
                     return false
                 }
@@ -276,7 +333,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         containerViewId = R.id.mainContent
                     )
 
-                    addPlupaShared(plupaQueryList)
+                    addPlupaShared(plupaQueryList,newText)
 
                     return false
                 }
@@ -306,11 +363,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun addPlupaShared(plupaQueryList: List<String>) {
+    private fun addPlupaShared(plupaQueryList: List<PlupaPojo>, search_results: String) {
+
+        val idList = ArrayList<String>()
+
+        for (type in plupaQueryList){
+
+            val id = type.dbId
+            val dbType = type.dbType
+            val dbName = "$id-$dbType"
+            idList.add(dbName)
+        }
+
         val setArrayList = HashSet<String>()
-        setArrayList.addAll(plupaQueryList)
+        setArrayList.addAll(idList)
 
         editor.putStringSet("plupaQuery", setArrayList)
+        editor.apply()
+
+
+        editor.putString("search_results", search_results)
         editor.apply()
 
     }

@@ -147,10 +147,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getPlupaResults(partQuery: String) = runBlocking{
-        repository.getPlupaResults(partQuery)
+        repository.getRevisedPlupaDetails(partQuery)
     }
-    fun getPlupaDetailsById(id:String) = runBlocking{
-        repository.getPlupaDetailsById(id)
+    fun getPlupaDetailsById(id:String, type: String) = runBlocking{
+        repository.getPlupaDetailsById(id, type)
     }
 
 }

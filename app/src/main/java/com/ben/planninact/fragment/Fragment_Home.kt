@@ -3,7 +3,11 @@ package com.ben.planninact.fragment
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.ben.planninact.R
+import com.ben.planninact.helper_class.Formatter
 import com.ben.planninact.room_persitence.ViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -439,6 +444,10 @@ class Fragment_Home : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        val editor: SharedPreferences.Editor = sharedpreferences.edit()
+
+        editor.putBoolean("page_detail", false)
+        editor.apply();
 
         CoroutineScope(Dispatchers.IO).launch {
             val titleList = plupaViewModel.getTitles()
@@ -550,10 +559,23 @@ class Fragment_Home : Fragment() {
                 val plupaData = plupaViewModel.getSecondScheduleByPartId(plupa_id)
                 val shortTitle = plupaData.part_name
                 val partDescription = plupaData.content_description
+                var partName = ""
 
-                setDataText("Part $shortTitle", partDescription)
-
-
+                when (shortTitle) {
+                    "A" -> {
+                        partName =
+                            "Part $shortTitle \n MATTERS WHICH MAY BE DEALT WITH IN A LOCAL PHYSICAL AND LAND USE DEVELOPMENT PLAN"
+                    }
+                    "B" -> {
+                        partName =
+                            "Part $shortTitle \n CONTENTS OF SURVEY REPORT"
+                    }
+                    "C" -> {
+                        partName =
+                            "Part $shortTitle \n CONTENT FOR RENEWAL AND RE-DEVELOPMENT PLAN"
+                    }
+                }
+                setDataText(partName, partDescription)
 
             }
             if (part_type == "third_schedule"){
@@ -576,16 +598,61 @@ class Fragment_Home : Fragment() {
     private fun setDataText(shortTitle: String, partDescription: String) {
 
         val formattedHtmlTitle = HtmlFormatter.formatHtml(
-            HtmlFormatterBuilder().setHtml(shortTitle)
+            HtmlFormatterBuilder().setHtml(shortTitle.toString())
                 .setImageGetter(HtmlResImageGetter(tvPlupaDetails.context))
         )
+        tvPlupaDetails.text = formattedHtmlTitle
+
         val formattedHtmlContent = HtmlFormatter.formatHtml(
-            HtmlFormatterBuilder().setHtml(partDescription)
+            HtmlFormatterBuilder().setHtml(partDescription.toString())
                 .setImageGetter(HtmlResImageGetter(tvPlupaData.context))
         )
-
-        tvPlupaDetails.text = formattedHtmlTitle
         tvPlupaData.text = formattedHtmlContent
+
+        val searchResults = sharedpreferences.getString("search_results", null)
+
+        if(searchResults != null){
+
+            val titleText = tvPlupaDetails.text.toString()
+            val contentText = tvPlupaData.text.toString()
+
+            val highLightedTitle = getFormattedText(titleText, searchResults)
+            val highLightedDesc = getFormattedText(contentText, searchResults)
+
+            if (highLightedTitle != null){
+                tvPlupaDetails.text = highLightedTitle
+            }
+            if (highLightedDesc != null){
+                tvPlupaData.text = highLightedDesc
+            }
+
+
+
+        }
+
+
+    }
+
+    private fun getFormattedText(oldText: String, highLightText:String):Spannable?{
+
+        return try {
+
+            val x = oldText.toLowerCase().indexOf(highLightText.toLowerCase())
+            val y = x + highLightText.length
+
+            val span: Spannable = SpannableString(oldText)
+            span.setSpan(BackgroundColorSpan(Color.YELLOW), x, y, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            Log.e("*-*-*3", span.toString())
+
+            span
+
+        }catch (e: Exception){
+            Log.e("*-*-*32", e.toString())
+
+            null
+        }
+
+
 
     }
 

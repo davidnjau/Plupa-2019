@@ -18,6 +18,7 @@ class Splash : AppCompatActivity() {
         Handler().postDelayed({
 
             val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("page_detail","true")
             startActivity(intent)
             finish()
 

@@ -4,44 +4,32 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
-import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ben.planninact.MainActivity
 import com.ben.planninact.R
 import com.ben.planninact.room_persitence.ViewModel
-import com.ben.planninact.room_persitence.entity.FirstSchedule
-import com.ben.planninact.room_persitence.entity.PartDetailsTitle
-import com.ben.planninact.room_persitence.entity.ThirdSchedule
-import kotlinx.android.synthetic.main.fragment_home.*
-import net.cachapa.expandablelayout.ExpandableLayout
 import org.sufficientlysecure.htmltextview.HtmlFormatter
 import org.sufficientlysecure.htmltextview.HtmlFormatterBuilder
 import org.sufficientlysecure.htmltextview.HtmlResImageGetter
 
 
-class ThirdScheduleAdapter(
+class TitleScheduleAdapter(
     private val context: Context,
-    private var plupaInfoList: List<ThirdSchedule>,
+    private var plupaInfoList: List<String>,
+    private var idList: ArrayList<String>,
 
 
     ) :
-    RecyclerView.Adapter<ThirdScheduleAdapter.Pager2ViewHolder>() {
+    RecyclerView.Adapter<TitleScheduleAdapter.Pager2ViewHolder>() {
 
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-
-//        val expanded_menu : ExpandableLayout = itemView.findViewById(R.id.expanded_menu)
         val tvPlupaHeading : TextView = itemView.findViewById(R.id.tvPartHeading)
-//        val recyclerViewNav : RecyclerView = itemView.findViewById(R.id.recyclerViewNav)
-
 
         init {
 
@@ -53,18 +41,40 @@ class ThirdScheduleAdapter(
 
             val position = adapterPosition
             val viewModel = ViewModel(context.applicationContext as Application)
-            val partNumber = plupaInfoList[position].title
-            val id = plupaInfoList[position].id
+            val partNumber = plupaInfoList[position]
 
             val sharedpreferences = context.getSharedPreferences("Plupa", Context.MODE_PRIVATE);
+            val part_title = sharedpreferences.getString("part_title", null)
+            var partTitle = ""
+
+            val id = position + 1
+
+            when (part_title) {
+                "plupa_title" -> {
+                    partTitle = "plupa_content"
+                }
+                "first_schedule" -> {
+                    partTitle = "first_schedule"
+                }
+                "second_schedule" -> {
+                    partTitle = "second_schedule"
+                }
+                "third_schedule" -> {
+                    partTitle = "third_schedule"
+                }
+
+            }
+
             val editor: SharedPreferences.Editor = sharedpreferences.edit()
 
-            editor.putString("part_type", "third_schedule")
+            editor.putString("part_type", partTitle)
             editor.putString("plupa_id", id.toString())
-            editor.apply();
 
             editor.putString("search_results", null)
             editor.apply()
+
+//            editor.putBoolean("page_detail", true)
+            editor.apply();
 
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
@@ -80,7 +90,7 @@ class ThirdScheduleAdapter(
     ): Pager2ViewHolder {
         return Pager2ViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.part_data,
+                R.layout.title_data,
                 parent,
                 false
             )
@@ -91,8 +101,7 @@ class ThirdScheduleAdapter(
 
         var viewModel = ViewModel(context.applicationContext as Application)
 
-        val part_name = plupaInfoList[position].title
-        val part_number = plupaInfoList[position].content_description
+        val part_name = plupaInfoList[position]
 
         val formattedHtmlContent = HtmlFormatter.formatHtml(
             HtmlFormatterBuilder().setHtml(part_name)
@@ -100,8 +109,6 @@ class ThirdScheduleAdapter(
         )
 
         holder.tvPlupaHeading.text = formattedHtmlContent
-
-
 
 
     }

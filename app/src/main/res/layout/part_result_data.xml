@@ -15,6 +15,18 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:id="@+id/tvPartDescription"
+            android:text="(part Heading)"
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:singleLine="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:id="@+id/tvPartHeading"
             android:text="part Heading"

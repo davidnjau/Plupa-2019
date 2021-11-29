@@ -133,28 +133,22 @@
                <TextView
                    android:layout_marginTop="10dp"
                    android:textStyle="bold"
+                   android:gravity="center"
                    android:layout_gravity="center"
                    android:layout_marginStart="15dp"
-                   android:gravity="center"
                    android:textColor="@android:color/black"
                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                   android:id="@+id/tvPlupaDetails"
-                   android:text=""
+                   android:id="@+id/tvPlupaTitle"
+                   android:text="Titles"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"/>
 
-
-
-               <org.sufficientlysecure.htmltextview.HtmlTextView
-                   android:paddingBottom="5dp"
-                   android:layout_marginBottom="7dp"
+               <androidx.recyclerview.widget.RecyclerView
                    android:layout_marginStart="15dp"
-                   android:text=""
-                   android:id="@+id/tvPlupaData"
+                   android:layout_marginTop="7dp"
                    android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:textAppearance="@android:style/TextAppearance.Large" />
-
+                   android:id="@+id/recyclerView"
+                   android:layout_height="wrap_content"/>
 
 
             </LinearLayout>
@@ -172,61 +166,6 @@
           android:background="@drawable/landing"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
-
-      <LinearLayout
-          android:id="@+id/linearLayout"
-          android:layout_marginBottom="15dp"
-          android:orientation="vertical"
-          android:layout_alignParentBottom="true"
-          android:layout_width="match_parent"
-          android:gravity="center"
-          android:layout_height="wrap_content">
-
-         <LinearLayout
-             android:orientation="horizontal"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-               <com.google.android.material.floatingactionbutton.FloatingActionButton
-                   android:layout_width="wrap_content"
-                   android:id="@+id/fabPrev"
-                   android:layout_gravity="bottom|end"
-                   android:layout_margin="10dp"
-                   app:layout_behavior="com.luasoftware.lualib2.ScrollAwareFABBehavior"
-                   app:tint="@android:color/white"
-                   app:srcCompat="@drawable/ic_action_prev"
-                   android:layout_height="wrap_content"/>
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:gravity="end"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-               <com.google.android.material.floatingactionbutton.FloatingActionButton
-                   android:layout_width="wrap_content"
-                   android:id="@+id/fabNext"
-                   android:layout_margin="10dp"
-                   app:layout_behavior="com.luasoftware.lualib2.ScrollAwareFABBehavior"
-                   app:tint="@android:color/white"
-                   app:srcCompat="@drawable/ic_action_next"
-                   android:layout_height="wrap_content"/>
-
-
-            </RelativeLayout>
-
-
-         </LinearLayout>
-
-      </LinearLayout>
-
 
 
    </RelativeLayout>

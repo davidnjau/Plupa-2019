@@ -58,6 +58,9 @@ class FirstScheduleAdapter(
             editor.putString("plupa_id", id.toString())
             editor.apply();
 
+            editor.putString("search_results", null)
+            editor.apply()
+
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
 
