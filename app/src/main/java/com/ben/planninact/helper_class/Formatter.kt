@@ -1,11 +1,20 @@
 package com.ben.planninact.helper_class
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.text.Html
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
+import android.util.Log
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
+import android.R
+import java.lang.StringBuilder
+
 
 class Formatter {
 
@@ -29,6 +38,19 @@ class Formatter {
             Html.fromHtml(html2).toString()
         }
     }
+
+
+    fun getJsonDataFromAsset(context: Context): String? {
+        val jsonString: String
+        try {
+            jsonString = context.assets.open("plupa_response.json").bufferedReader().use { it.readText() }
+        } catch (ioException: IOException) {
+            ioException.printStackTrace()
+            return null
+        }
+        return jsonString
+    }
+
 
 
 

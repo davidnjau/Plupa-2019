@@ -13,7 +13,7 @@ android {
         applicationId "com.ben.planninact"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
+        versionCode 2
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -82,5 +82,7 @@ dependencies {
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
 
     implementation 'org.sufficientlysecure:html-textview:4.0'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
 
 }

@@ -24,18 +24,20 @@ import com.ben.planninact.adapter.ThirdScheduleAdapter
 import com.ben.planninact.fragment.Fragment_Home
 import com.ben.planninact.fragment.Fragment_I
 import com.ben.planninact.fragment.Fragment_Titles
-import com.ben.planninact.helper_class.CheckInternet
-import com.ben.planninact.helper_class.PlupaPojo
-import com.ben.planninact.network_persitence.DBScheduleDetails
-import com.ben.planninact.network_persitence.Interface
-import com.ben.planninact.network_persitence.RetrofitBuilder
+import com.ben.planninact.helper_class.*
+import com.ben.planninact.network_persitence.*
 import com.ben.planninact.room_persitence.ViewModel
 import com.ben.planninact.room_persitence.entity.*
+import com.ben.planninact.room_persitence.entity.ThirdSchedule
 import com.google.android.material.navigation.NavigationView
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,6 +72,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+        getLocalPlupa()
 
         if (CheckInternet().isConnected(this)){
             checkData()
@@ -116,6 +120,96 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerLayout.closeDrawer(GravityCompat.START)
 
+
+    }
+
+    private fun getLocalPlupa(){
+
+        val jsonFileString = Formatter().getJsonDataFromAsset(this)
+        if (jsonFileString != null) {
+
+            val json = JSONObject(jsonFileString)
+            val partDetails = json.getJSONArray("partDetails")
+            val firstSchedule = json.getJSONArray("firstSchedule")
+            val secondSchedule = json.getJSONArray("secondSchedule")
+            val thirdSchedule = json.getJSONArray("thirdSchedule")
+
+            //Part Title
+            val dbPartTitleList = ArrayList<DbPartTitle>()
+            for (i in 0 until partDetails.length()){
+
+                val jsonObject = partDetails.getJSONObject(i)
+                val id = jsonObject.getString("id")
+                val partNumber = jsonObject.getString("part_number")
+                val partName = jsonObject.getString("part_name")
+
+                val dbPartDetailsList = ArrayList<DbPartDetails>()
+                val jsonArrayContent = jsonObject.getJSONArray("content_description")
+                for (j in 0 until jsonArrayContent.length()){
+
+                    val jsonObjectContent = jsonArrayContent.getJSONObject(j)
+                    val contentId = jsonObjectContent.getString("id")
+                    val contentPartDescription = jsonObjectContent.getString("part_description")
+                    val contentPartHeading = jsonObjectContent.getString("part_heading")
+                    val contentPartId = jsonObjectContent.getString("part_id")
+
+                    val dbPartDetails = DbPartDetails(contentId, contentPartDescription, contentPartHeading, contentPartId)
+                    dbPartDetailsList.add(dbPartDetails)
+                }
+
+                val dbPartTitle = DbPartTitle(id, partNumber, partName, dbPartDetailsList)
+                dbPartTitleList.add(dbPartTitle)
+            }
+            plupaViewModel.insertPartData(dbPartTitleList)
+
+            //First Schedule
+            val firstScheduleList = ArrayList<DbFirstSchedule>()
+            for (i in 0 until firstSchedule.length()){
+
+                val jsonObject = firstSchedule.getJSONObject(i)
+                val id = jsonObject.getString("id")
+                val part_name = jsonObject.getString("part_name")
+                val content_description = jsonObject.getString("content_description")
+
+                val dbFirstSchedule = DbFirstSchedule(id, part_name, content_description)
+                firstScheduleList.add(dbFirstSchedule)
+
+            }
+            plupaViewModel.insertFirstSchedule(firstScheduleList)
+
+            //Second Schedule
+            val secondScheduleList = ArrayList<DbSecondSchedule>()
+            for (i in 0 until secondSchedule.length()){
+
+                val jsonObject = secondSchedule.getJSONObject(i)
+                val id = jsonObject.getString("id")
+                val part_name = jsonObject.getString("part_name")
+                val content_description = jsonObject.getString("content_description")
+
+                val dbSecondSchedule = DbSecondSchedule(id, part_name, content_description)
+                secondScheduleList.add(dbSecondSchedule)
+
+            }
+            plupaViewModel.insertSecondSchedule(secondScheduleList)
+
+            //Third Schedule
+            val thirdScheduleList = ArrayList<DbThirdSchedule>()
+            for (i in 0 until thirdSchedule.length()){
+
+                val jsonObject = thirdSchedule.getJSONObject(i)
+                val id = jsonObject.getString("id")
+                val title = jsonObject.getString("title")
+                val content_description = jsonObject.getString("content_description")
+
+                val dbThirdSchedule = DbThirdSchedule(id, title, content_description)
+                thirdScheduleList.add(dbThirdSchedule)
+
+            }
+            plupaViewModel.insertThirdSchedule(thirdScheduleList)
+
+
+
+        }
 
     }
 
@@ -243,8 +337,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun checkData() {
-
-
 
         val apiService = RetrofitBuilder.getRetrofit("http://192.168.81.34:8082")
             .create(Interface::class.java)
